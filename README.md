@@ -313,3 +313,171 @@ This renders the `index.html` file that will be used to interact with the backen
 **Throws**
 
 - `403` if the user is not logged in
+
+#### `GET /api/comments/:commentID? ` - Gets a specific comment
+
+**Returns**
+
+- A success message
+
+**Throws**
+
+- `403` if the user is not logged in
+- `403` if the user is not the author of the freet
+- `404` if the freetId is invalid
+
+#### `DELETE /api/comments/:commentID? ` - Delete a specific comment
+
+**Returns**
+
+- A success message
+
+**Throws**
+
+- `403` if the user is not logged in
+- `403` if the user is not the author of the comment or freet
+- `404` if the commentId is invalid
+
+#### `POST /api/comments/:commentID? ` - Adds a comment to a Freet
+
+**Body** 
+- `username` _{string}_ the username of user writing the comment
+- `text` _{string}_ the text the user wishes to comment
+- `freet` _{string}_ the FreetID of the freet being commented on
+
+**Returns**
+
+- A success message
+
+**Throws**
+
+- `404` if the commentId is invalid
+
+#### `POST /api/users/reaction ` -Adds a Reacted post to user's Reacted state
+
+**Body**
+- `reaction` the new reaction (includes Reaction.freet, Reaction.vote)
+
+**Returns**
+
+- A success message
+
+**Throws**
+
+- `403` if the user is not logged in
+
+#### `GET /api/users/reaction/FreetID? ` -Returns the reaction 
+
+**Body**
+- `reaction` the new reaction (includes Reaction.freet, Reaction.vote)
+
+**Returns**
+
+- A Number 0, 1, 2 representing the reaction the signed-in user had on the Freet with FreetID "Reaction.vote"
+- 0 if there is no reaction by that user on that freet
+
+**Throws**
+
+- `403` if the user is not logged in
+- `404` if the FreetId is invalid
+
+#### `GET /api/freet/:freetId?/comments ` - Returns Comments on a Freet
+
+**Returns**
+
+- a list of Comments for Comments that were posted under this Freet
+- an empty list if there are no Comments on this Freet
+
+**Throws**
+
+- `404` if the FreetId is invalid
+
+#### `GET /api/freet/:freetId?/reactions ` - View number of Reactions on a Freet
+
+**Returns**
+
+- a tuple representing (upvotes, downvotes) for the number of reactions the Freet has
+
+**Throws**
+
+- `404` if the FreetId is invalid
+
+#### `POST /api/freet/:freetId?/flag ` - Flags or UnFlags a Freet
+
+**Body**
+
+- flag _{bool}_ True if Flagging, False if Un-Flagging
+
+**Returns**
+
+- a success message
+
+**Throws**
+
+- `404` if the FreetId is invalid
+
+#### `POST /api/reactions` - Create an new reaction
+
+**Body**
+
+- `vote` _{Number}_ - The User's vote {-1, 1}
+- `user` _{string}_ - UserID
+- `freet` _{string}_ - FreetID
+
+**Returns**
+
+- A success message
+- An object with the created reaction's details 
+
+**Throws**
+
+- `403` if there is not a user logged in
+- `400` if vote in the wrong format
+- `404` if 4 if the UserID is invalid
+- `404` if 4 if the FreetID is invalid
+
+#### `PUT /api/reactions` - Update a user's profile
+
+**Body** _(no need to add fields that are not being changed)_
+
+- `react`_{string}_ - reactID
+- `user` _{string}_ - userID
+- `vote` _{Number}_ - The Users new vote {-1, 1}
+
+
+**Returns**
+
+- A success message
+- An object with the created reaction's details 
+
+**Throws**
+
+- `403` if the user is not logged in
+- `403` if the user logged in is not the user who made the Reaction
+- `400` if vote in the wrong format
+- `404` if 4 if the UserID is invalid
+- `404` if 4 if the reactID is invalid
+
+
+#### `DELETE /api/reactions
+
+**body**
+
+- `react`_{string}_ - reactID
+- `user` _{string}_ - userID
+
+**Returns**
+
+- A success message
+
+**Throws**
+
+- `403` if there is not a user logged in
+- `403` if the user logged in is not the user who made the Reaction
+- `404` if 4 if the UserID is invalid
+- `404` if 4 if the reactID is invalid
+
+#### `GET /api/freets/safe` - Get all the SAFE freets
+**Returns**
+
+- An array of all NOT-FLAGGED freets sorted in descending order by date modified
