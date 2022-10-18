@@ -8,18 +8,27 @@ import {Schema, model} from 'mongoose';
  * DO NOT implement operations here ---> use collection file
  */
 
-// Type definition for User on the backend
+// Type definition for Comment on the backend
 export type Comment = {
   _id: Types.ObjectId; // MongoDB assigns each object this ID on creation
   userID: User;
   post: Freet;
-  postUserID: User;
+//   postUserID: User; // Not currently implemented because you can access this through Comment.Post.User
   datePosted: Date;
-  text: String;
+  content: string;
 };
 
+// export type PopulatedComment = {
+//     _id: Types.ObjectId; 
+//     userID: Types.ObjectId;
+//     post: Freet;
+//   //   postUserID: User;
+//     datePosted: Date;
+//     concontent: String;
+//   };
+
 // Mongoose schema definition for interfacing with a MongoDB table
-// Users stored in this table will have these fields, with the
+// Comments stored in this table will have these fields, with the
 // type given by the type property, inside MongoDB
 const CommentSchema = new Schema({
   // The user who commented's username
@@ -29,13 +38,13 @@ const CommentSchema = new Schema({
     required: true,
     ref: 'User'
   },
-  // The user who made original Freet's username
-  postUserID: {
-    // Use Types.ObjectId outside of the schema
-    type: Schema.Types.ObjectId,
-    required: true,
-    ref: 'User'
-  },
+//   // The user who made original Freet's username. Not currently implemented because you can access this through Comment.Post.User
+//   postUserID: {
+//     // Use Types.ObjectId outside of the schema
+//     type: Schema.Types.ObjectId,
+//     required: true,
+//     ref: 'User'
+//   },
   // The original post the comment is responding to
   password: {
     type: Schema.Types.ObjectId,
@@ -48,7 +57,7 @@ const CommentSchema = new Schema({
     required: true
   },
   // The actual text in the comment
-  text: {
+  content: {
     type: String,
     required: true
   }
