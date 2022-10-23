@@ -22,10 +22,11 @@ class CommentCollection {
    */
   static async addOne(userID: Types.ObjectId | string, freetId: Types.ObjectId | string, content: string): Promise<HydratedDocument<Comment>> {
     const date = new Date();
+    console.log(freetId);
     const Comment = new CommentModel({
       userID,
-      freetId,
-      dateCreated: date,
+      post:freetId,
+      datePosted: date,
       content,
     });
     await Comment.save(); // Saves Comment to MongoDB
@@ -63,14 +64,14 @@ class CommentCollection {
   }
 
   /**
-   * Get all the Comments in by given author
+   * Get all the Comments by given author
    *
    * @param {string} username - The username of author of the Comments
    * @return {Promise<HydratedDocument<Comment>[]>} - An array of all of the Comments
    */
   static async findAllByUsername(username: string): Promise<Array<HydratedDocument<Comment>>> {
-    const author = await UserCollection.findOneByUsername(username);
-    return CommentModel.find({userID: author._id}).populate('userID');
+    const user = await UserCollection.findOneByUsername(username);
+    return CommentModel.find({userID: user._id}).populate('userID');
   }
 
 

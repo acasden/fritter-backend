@@ -33,7 +33,7 @@ router.get(
       next();
       return;
     }
-
+    //no authorID -> get All
     const allFreets = await FreetCollection.findAll();
     const response = allFreets.map(util.constructFreetResponse);
     res.status(200).json(response);

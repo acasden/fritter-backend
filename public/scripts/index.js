@@ -10,6 +10,7 @@ function showObject(obj) {
 }
 
 function showResponse(response) {
+  console.log(response);
   response.json().then(data => {
     showObject({
       data,

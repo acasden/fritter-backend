@@ -11,21 +11,20 @@ import {Schema, model} from 'mongoose';
 // Type definition for Comment on the backend
 export type Comment = {
   _id: Types.ObjectId; // MongoDB assigns each object this ID on creation
-  userID: User;
-  post: Freet;
+  userID: Types.ObjectId; //userID
+  post: Types.ObjectId;  //FreetID
 //   postUserID: User; // Not currently implemented because you can access this through Comment.Post.User
   datePosted: Date;
   content: string;
 };
 
-// export type PopulatedComment = {
-//     _id: Types.ObjectId; 
-//     userID: Types.ObjectId;
-//     post: Freet;
-//   //   postUserID: User;
-//     datePosted: Date;
-//     concontent: String;
-//   };
+export type PopulatedComment = {
+    _id: Types.ObjectId; 
+    userID: User;
+    post: Types.ObjectId; //if needed, make post into Freet and populate(post) in collection
+    datePosted: Date;
+    content: String;
+  };
 
 // Mongoose schema definition for interfacing with a MongoDB table
 // Comments stored in this table will have these fields, with the
@@ -46,7 +45,7 @@ const CommentSchema = new Schema({
 //     ref: 'User'
 //   },
   // The original post the comment is responding to
-  password: {
+  post: {
     type: Schema.Types.ObjectId,
     required: true,
     ref: 'Freet'

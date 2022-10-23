@@ -1,7 +1,7 @@
 import type {Request, Response, NextFunction} from 'express';
 import {Types} from 'mongoose';
 import CommentCollection from '../comment/collection';
-import FreetCollection from 'freet/collection';
+import FreetCollection from '../freet/collection';
 
 /**
  * Checks if a comment with commentId is req.params exists
