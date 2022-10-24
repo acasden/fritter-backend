@@ -28,24 +28,43 @@ const router = express.Router();
 router.get(
   '/',
   async (req: Request, res: Response, next: NextFunction) => {
-    // Check if authorId query parameter was supplied
-    if (req.query.author !== undefined) {
+    // If yes username or yes freetID, go to next function
+    console.log("here");
+    if (req.query.author !== undefined || req.query.id !==undefined) {
+      console.log("one is true");
       next();
       return;
     }
-
+    //not given parameter "author" or "id"
     const allComments = await CommentCollection.findAll();
     const response = allComments.map(util.constructCommentResponse);
     res.status(200).json(response);
+    console.log(response, 1);
   },
-  [
-    userValidator.isAuthorExists
-  ],
-  async (req: Request, res: Response) => {
-    const authorComments = await CommentCollection.findAllByUsername(req.query.author as string);
-    const response = authorComments.map(util.constructCommentResponse);
-    res.status(200).json(response);
+  async (req: Request, res: Response, next: NextFunction) => {
+  //if yes freetID, go to next function
+  if (req.query.id == undefined){
+    console.log("there's not an id");
+    next();
+    return;
   }
+    
+  const authorComments = await CommentCollection.findAllByFreetId(req.query.id as string);
+  const response = authorComments.map(util.constructCommentResponse);
+  res.status(200).json(response);
+  console.log(response, 3);
+  },
+  [    userValidator.isAuthorExists
+  ],
+  
+  async (req: Request, res: Response) => {
+    //case: given "author" username
+    userValidator.isAuthorExists
+    const allComments = await CommentCollection.findAllByUsername(req.query.author as string);
+    const response = allComments.map(util.constructCommentResponse);
+    res.status(200).json(response);  
+    console.log(response, 2);
+  },
 );
 
 /**

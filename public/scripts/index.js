@@ -42,7 +42,9 @@ const formsAndHandlers = {
   'delete-freet': deleteFreet,
   'create-comment': createComment,
   'view-all-comments': viewAllComments,
-  'delete-comment':deleteComment
+  'delete-comment':deleteComment,
+  'view-comments-by-freets': viewCommentsByFreet,
+  'view-comments-user': viewCommentsByAuthor
 };
 
 // Attach handlers to forms

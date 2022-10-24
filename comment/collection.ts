@@ -49,7 +49,7 @@ class CommentCollection {
    * @param {string} CommentID - The id of the Comment to find
    * @return {Promise<HydratedDocument<Comment>> | Promise<null> } - The Comment with the given CommentID, if any
    */
-   static async findMany(FreetId: Types.ObjectId | string): Promise<Array<HydratedDocument<Comment>>> {
+   static async findAllByFreetId(FreetId: Types.ObjectId | string): Promise<Array<HydratedDocument<Comment>>> {
     return CommentModel.find({freetId: FreetId}).sort({datePosted: -1}).populate('userID');
   }
 

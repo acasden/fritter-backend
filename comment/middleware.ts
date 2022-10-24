@@ -12,7 +12,7 @@ const isCommentExists = async (req: Request, res: Response, next: NextFunction) 
   if (!comment) {
     res.status(404).json({
       error: {
-        commentNotFound: `Comment with comment ID ${req.params.commentId} does not exist.`
+        commentNotFound: `Comment with comment ID ${req.params.id} does not exist.`
       }
     });
     return;

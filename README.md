@@ -338,22 +338,23 @@ This renders the `index.html` file that will be used to interact with the backen
 - `403` if the user is not the author of the comment or freet
 - `404` if the commentId is invalid
 
-#### `POST /api/comments/:commentID? ` - Adds a comment to a Freet
+#### `POST /api/comments` - Adds a comment to a Freet
 
 **Body** 
-- `username` _{string}_ the username of user writing the comment
-- `text` _{string}_ the text the user wishes to comment
+- `userId` _{string}_ the userId of user writing the comment
+- `content` _{string}_ the text the user wishes to comment
 - `freet` _{string}_ the FreetID of the freet being commented on
 
 **Returns**
 
 - A success message
+- A object with the created comment
 
 **Throws**
 
 - `404` if the commentId is invalid
 
-#### `POST /api/users/reaction ` -Adds a Reacted post to user's Reacted state
+#### `POST /api/users/reactions/freetId?&value? ` -Adds a Reacted post to user's Reacted state
 
 **Body**
 - `reaction` the new reaction (includes Reaction.freet, Reaction.vote)
@@ -361,12 +362,13 @@ This renders the `index.html` file that will be used to interact with the backen
 **Returns**
 
 - A success message
+- A object with the created Reaction
 
 **Throws**
 
 - `403` if the user is not logged in
 
-#### `GET /api/users/reaction/FreetID? ` -Returns the reaction 
+#### `GET /api/users/reactions/FreetID? ` -Returns the reaction 
 
 **Body**
 - `reaction` the new reaction (includes Reaction.freet, Reaction.vote)
@@ -477,7 +479,7 @@ This renders the `index.html` file that will be used to interact with the backen
 - `404` if 4 if the UserID is invalid
 - `404` if 4 if the reactID is invalid
 
-#### `GET /api/freets/safe` - Get all the SAFE freets
+#### `GET /api/freets/modes/safe` - Get all the SAFE freets
 **Returns**
 
 - An array of all NOT-FLAGGED freets sorted in descending order by date modified
