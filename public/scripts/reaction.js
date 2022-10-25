@@ -13,7 +13,7 @@
   }
   
   function viewReactionsByFreet(fields) {
-    fetch(`/api/reactions?freet=${fields.freet}`)
+    fetch(`/api/reactions?freetId=${fields.freetId}`)
     .then(showResponse)
     .catch(showResponse);
   }
@@ -26,7 +26,7 @@
     
     
   function deleteReaction(fields) {
-    fetch(`/api/reactions/${fields.id}`, {method: 'DELETE'})
+    fetch(`/api/reactions/${fields.reactionId}`, {method: 'DELETE'})
       .then(showResponse)
       .catch(showResponse);
   }

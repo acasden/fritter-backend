@@ -6,12 +6,18 @@ import ReactionCollection from '../reaction/collection';
  * Checks if a reaction with reactionId is req.params exists
  */
 const isReactionExists = async (req: Request, res: Response, next: NextFunction) => {
-  const validFormat = Types.ObjectId.isValid(req.params.reactionId);
-  const reaction = validFormat ? await ReactionCollection.findOne(req.params.reactionId) : '';
+  var reactId= req.body.reactionId;
+  if (reactId == undefined){
+    console.log(req.body, req.params, req.query);
+    reactId =req.params.reactionId;
+  }
+  console.log(reactId);
+  const validFormat = Types.ObjectId.isValid(reactId);
+  const reaction = validFormat ? await ReactionCollection.findOne(reactId) : '';
   if (!reaction) {
     res.status(404).json({
       error: {
-        reactionNotFound: `Reaction with reaction ID ${req.params.reactionId} does not exist.`
+        reactionNotFound: `Reaction with reaction ID ${reactId} does not exist.`
       }
     });
     return;
@@ -50,12 +56,12 @@ const isValidReactionModifier = async (req: Request, res: Response, next: NextFu
  * Raises error 403 if not 
  */
 const isValidReaction =async (req: Request, res:Response, next: NextFunction) => {
-  console.log(req.param);
-  console.log(req.body);
-  const input = req.params.vote;
-  console.log(input);
-  console.log(req.params);
-  console.log(parseInt(input));
+  // console.log(req.param);
+  // console.log(req.body);
+  const input = req.body.vote;
+  console.log('input', input);
+  // console.log(req.params);
+  // console.log(parseInt(input));
   if (parseInt(input)!==0 && parseInt(input)!==1 && parseInt(input)!==-1 ){
     res.status(403).json({
       error: 'The only valid reactions are -1, 0, and 1. Cannot parse invalid reaction value.'

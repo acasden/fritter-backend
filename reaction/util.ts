@@ -26,6 +26,8 @@ const constructReactionResponse = (reaction: HydratedDocument<Reaction>): Reacti
   const user = reactionCopy.UserId;
   const freet = reactionCopy.FreetId;
   delete reactionCopy.UserId;
+  delete reactionCopy.FreetId;
+  console.log("user, freet", user, freet);
   return {
     ...reactionCopy,
     _id: reactionCopy._id.toString(),

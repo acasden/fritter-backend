@@ -32,13 +32,15 @@ router.get(
   '/',
   async (req: Request, res: Response, next: NextFunction) => {
     // Check if freetId query parameter was supplied
+    console.log("getting reaction");
     if (req.query.freetId !== undefined) {
       next();
       return;
     }
     //no freetId -> get All
     const allReactions = await ReactionCollection.findAll();
-    console.log("there's no freet, getting all reactinos");
+    console.log("there's no freet, getting all reactions");
+    console.log("all reactions: ", allReactions);
     const response = allReactions.map(util.constructReactionResponse);
     res.status(200).json(response);
   },
@@ -74,11 +76,10 @@ router.get(
       reactionValidator.isValidReaction
     ],
     async (req: Request, res: Response) => {
+      console.log("reaction post request");
       const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
       const freetId = (req.body.freetId)
       const freet = await FreetCollection.findOne(freetId);
-      console.log(req.body);
-      console.log(freet);
       if (!freet){ //same as freetValidator.isFreetExists
         res.status(404).json({
           error: {
@@ -93,8 +94,7 @@ router.get(
         await ReactionCollection.deleteOneByFreetAndUser(userId, freetId);
       }
       //TODO: add value to Freet's count
-      const reaction = await ReactionCollection.addOne(userId, freetId, req.body.value);
-      console.log("made new freet");
+      const reaction = await ReactionCollection.addOne(userId, freetId, req.body.vote);
       res.status(201).json({
         message: `React was created successfully.`,
         react: util.constructReactionResponse(reaction)
@@ -115,6 +115,11 @@ router.get(
  */
 router.delete(
   '/:reactionId?',
+  // async (req: Request, res: Response, next:NextFunction) => {
+  //   console.log(req.params);
+  //   next();
+  //   return
+  // },
   [
     userValidator.isUserLoggedIn,
     reactionValidator.isReactionExists,

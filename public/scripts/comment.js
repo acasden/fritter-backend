@@ -14,7 +14,7 @@
 }
 
 function viewCommentsByFreet(fields) {
-  fetch(`/api/comments?id=${fields.id}`)
+  fetch(`/api/comments?freetId=${fields.freetId}`)
   .then(showResponse)
   .catch(showResponse);
 }
@@ -33,7 +33,7 @@ function createComment(fields) {
   
   
 function deleteComment(fields) {
-  fetch(`/api/comments/${fields.id}`, {method: 'DELETE'})
+  fetch(`/api/comments/${fields.commentId}`, {method: 'DELETE'})
     .then(showResponse)
     .catch(showResponse);
 }

@@ -103,7 +103,8 @@ class ReactionCollection {
    static async findOneByUserAndFreet(userId: Types.ObjectId |string, freetId: Types.ObjectId |string): Promise<Array<HydratedDocument<Reaction>>> {
     const freet = await FreetCollection.findOne(freetId);
     const user = await UserCollection.findOneByUserId(userId);
-    return ReactionModel.findOne({userId: user._id, freetId:freet._id}).populate('FreetId');
+    console.log("finding one for freetid, userid: ", freet._id, user._id);
+    return ReactionModel.findOne({UserId: user._id, FreetId:freet._id}); //.populate('FreetId');
    }
 
   /**

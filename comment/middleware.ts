@@ -12,7 +12,7 @@ const isCommentExists = async (req: Request, res: Response, next: NextFunction) 
   if (!comment) {
     res.status(404).json({
       error: {
-        commentNotFound: `Comment with comment ID ${req.params.freetId} does not exist.`
+        commentNotFound: `Comment with comment ID ${req.params.commentId} does not exist.`
       }
     });
     return;
@@ -51,8 +51,14 @@ const isValidCommentModifier = async (req: Request, res: Response, next: NextFun
   const comment = await CommentCollection.findOne(req.params.commentId);
   const userId = comment.userID._id;
   const freetID = comment.post._id;
-  const freet = FreetCollection.findOne(freetID);
-  const freetUserId= (await freet).authorId;
+  const freet = await FreetCollection.findOne(freetID);
+  if (!freet){
+    res.status(403).json({
+      error: 'Invalid freet.'
+    });
+    return;
+  }
+  const freetUserId= freet.authorId;
   if (req.session.userId !== userId.toString() && req.session.userId !== freetUserId) {
     res.status(403).json({
       error: 'Cannot modify other users\' comments.'
