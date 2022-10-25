@@ -12,6 +12,8 @@ import * as userValidator from '../user/middleware';
 import {userRouter} from '../user/router';
 import {freetRouter} from '../freet/router';
 import {commentRouter} from '../comment/router';
+import {reactionRouter} from '../reaction/router';
+// import {}
 
 // Load environmental variables
 dotenv.config({});
@@ -78,7 +80,7 @@ app.get('/', (req: Request, res: Response) => {
 app.use('/api/users', userRouter);
 app.use('/api/freets', freetRouter);
 app.use('/api/comments', commentRouter);
-// app.use('/api/reactions', reactionRouter);
+app.use('/api/reactions', reactionRouter);
 // app.use('/api/modes', modeRouter);
 
 // Catch all the other routes and display error message

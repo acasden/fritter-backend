@@ -1,3 +1,4 @@
+
 // Show an object on the screen.
 function showObject(obj) {
   const pre = document.getElementById('response');
@@ -28,6 +29,7 @@ function showResponse(response) {
  */
 
 // Map form (by id) to the function that should be called on submit
+
 const formsAndHandlers = {
   'create-user': createUser,
   'delete-user': deleteUser,
@@ -44,7 +46,13 @@ const formsAndHandlers = {
   'view-all-comments': viewAllComments,
   'delete-comment':deleteComment,
   'view-comments-by-freets': viewCommentsByFreet,
-  'view-comments-user': viewCommentsByAuthor
+  'view-comments-user': viewCommentsByAuthor,
+  'view-all-reactions': viewAllReactions,
+  'view-reactions-by-freet': viewReactionsByFreet,
+  'create-reaction': createReaction,
+  'delete-reaction': deleteReaction
+  // 'split-freet': splitFreet,
+  
 };
 
 // Attach handlers to forms

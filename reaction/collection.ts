@@ -2,7 +2,7 @@ import type {HydratedDocument, Types} from 'mongoose';
 import type {Reaction} from './model';
 import ReactionModel from './model';
 import UserCollection from '../user/collection';
-import FreetCollection from 'freet/collection';
+import FreetCollection from '../freet/collection';
 
 /**
  * This files contains a class that has the functionality to explore reactions
@@ -22,14 +22,13 @@ class ReactionCollection {
    * @return {Promise<HydratedDocument<Reaction>>} - The newly created reaction
    */
   static async addOne(userId: Types.ObjectId | string, freetId: Types.ObjectId | string, vote: number): Promise<HydratedDocument<Reaction>> {
-    const date = new Date();
     const reaction = new ReactionModel({
       UserId: userId,
       vote,
       FreetId: freetId
     });
     await reaction.save(); // Saves reaction to MongoDB
-    return reaction.populate('freetId');
+    return reaction.populate('FreetId');
   }
 
   /**
@@ -39,7 +38,7 @@ class ReactionCollection {
    * @return {Promise<HydratedDocument<Reaction>> | Promise<null> } - The reaction with the given reactionId, if any
    */
   static async findOne(reactionId: Types.ObjectId | string): Promise<HydratedDocument<Reaction>> {
-    return ReactionModel.findOne({_id: reactionId}).populate('freetId');
+    return ReactionModel.findOne({_id: reactionId});    // .populate('freetId');
   }
 
   /**
@@ -48,7 +47,7 @@ class ReactionCollection {
    * @return {Promise<HydratedDocument<Reaction>[]>} - An array of all of the reactions
    */
   static async findAll(): Promise<Array<HydratedDocument<Reaction>>> {
-    return ReactionModel.find({}).populate('freetId');
+    return ReactionModel.find({}).populate('FreetId');
   }
 
   /**
@@ -59,7 +58,7 @@ class ReactionCollection {
    */
   static async findAllByUserId(userId: Types.ObjectId | string): Promise<Array<HydratedDocument<Reaction>>> {
     const user = await UserCollection.findOneByUserId(userId);
-    return ReactionModel.find({userId: user._id}).populate('freetId');
+    return ReactionModel.find({userId: user._id}).populate('FreetId');
   }
 
   /**
@@ -70,7 +69,7 @@ class ReactionCollection {
    */
    static async findAllByUsername(username: string): Promise<Array<HydratedDocument<Reaction>>> {
     const user = await UserCollection.findOneByUsername(username);
-    return ReactionModel.find({userId: user._id}).populate('freetId');
+    return ReactionModel.find({userId: user._id}).populate('FreetId');
   }
 
  /**
@@ -81,9 +80,19 @@ class ReactionCollection {
    */
   static async findAllByFreetId(freetId: Types.ObjectId |string): Promise<Array<HydratedDocument<Reaction>>> {
     const freet = await FreetCollection.findOne(freetId);
-    return ReactionModel.find({FreetId: freet._id}).populate('freetId');
+    return ReactionModel.find({FreetId: freet._id}).populate('FreetId');
   } 
 
+  static async findUpByFreetId(freetId: Types.ObjectId |string): Promise<Array<HydratedDocument<Reaction>>> {
+    const freet = await FreetCollection.findOne(freetId);
+    return ReactionModel.find({FreetId: freet._id, vote:1}).populate('FreetId');
+  } 
+
+  static async findDownByFreetId(freetId: Types.ObjectId |string): Promise<Array<HydratedDocument<Reaction>>> {
+    const freet = await FreetCollection.findOne(freetId);
+    return ReactionModel.find({FreetId: freet._id, vote:-1}).populate('FreetId');
+  } 
+  
   /**
    * Finds freet by user and freet combo
    * 
@@ -94,7 +103,7 @@ class ReactionCollection {
    static async findOneByUserAndFreet(userId: Types.ObjectId |string, freetId: Types.ObjectId |string): Promise<Array<HydratedDocument<Reaction>>> {
     const freet = await FreetCollection.findOne(freetId);
     const user = await UserCollection.findOneByUserId(userId);
-    return ReactionModel.findOne({userId: user._id, freetId:freet._id}).populate('freetId');
+    return ReactionModel.findOne({userId: user._id, freetId:freet._id}).populate('FreetId');
    }
 
   /**
@@ -110,7 +119,7 @@ class ReactionCollection {
     else{reaction.vote = vote;
     await reaction.save();}
     
-    return reaction.populate('freetId'); //this hopefully works even when removing 
+    return reaction.populate('FreetId'); //this hopefully works even when removing, else we just set reaction.vote == 0
   }
 
   /**
@@ -124,13 +133,28 @@ class ReactionCollection {
     return reaction !== null;
   }
 
+  static async deleteOneByFreetAndUser(UserId: Types.ObjectId | string, FreetId: Types.ObjectId | string): Promise<boolean> {
+    const reaction = await ReactionModel.deleteOne({UserId, FreetId});
+    return reaction !== null;
+  }
   /**
    * Delete all the reactions on a given post
    *
    * @param {string} authorId - The id of author of reactions
    */
-  static async deleteUsers(freetId: Types.ObjectId | string): Promise<void> {
+  static async deleteByFreet(freetId: Types.ObjectId | string): Promise<void> {
     await ReactionModel.deleteMany({freetId});
+  }
+
+
+  /**
+   * Delete all the reactions by Given user 
+   * user case: user account is deleted
+   *
+   * @param {string} authorId - The id of author of reactions
+   */
+   static async deleteByUser(UserId: Types.ObjectId | string): Promise<void> {
+    await ReactionModel.deleteMany({UserId});
   }
 
 }

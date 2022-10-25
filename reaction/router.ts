@@ -1,10 +1,11 @@
 import type {NextFunction, Request, Response} from 'express';
 import express from 'express';
 import ReactionCollection from './collection';
-import UserCollection from 'user/collection';
-import FreetCollection from 'freet/collection';
+import UserCollection from '../user/collection';
+import FreetCollection from '../freet/collection';
 import * as userValidator from '../user/middleware';
 import * as reactionValidator from '../reaction/middleware';
+import * as freetValidator from '../freet/middleware';
 import * as util from './util';
 
 const router = express.Router();
@@ -31,20 +32,22 @@ router.get(
   '/',
   async (req: Request, res: Response, next: NextFunction) => {
     // Check if freetId query parameter was supplied
-    if (req.query.freet !== undefined) {
+    if (req.query.freetId !== undefined) {
       next();
       return;
     }
     //no freetId -> get All
     const allReactions = await ReactionCollection.findAll();
+    console.log("there's no freet, getting all reactinos");
     const response = allReactions.map(util.constructReactionResponse);
     res.status(200).json(response);
   },
   [
-    userValidator.isAuthorExists
+    freetValidator.isFreetExists //make sure freet exist
   ],
   async (req: Request, res: Response) => {
-    const freetReactions = await ReactionCollection.findAllByUsername(req.query.freet as string);
+    const freetReactions = await ReactionCollection.findAllByFreetId(req.query.freetId as string);
+    console.log("there's a freet, looking at it's reactions", freetReactions);
     const response = freetReactions.map(util.constructReactionResponse);
     res.status(200).json(response);
   }
@@ -67,18 +70,36 @@ router.get(
  router.post(
     '/',
     [
-      userValidator.isUserLoggedIn
+      userValidator.isUserLoggedIn,
+      reactionValidator.isValidReaction
     ],
     async (req: Request, res: Response) => {
-      const user = await UserCollection.findOneByUserId(req.body.user);
-      const freet = await FreetCollection.findOne(req.body.freet);
-      //TODO
-      // if user!= user or freet does not exist raise error
-      // if reaction exists, put ?
+      const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
+      const freetId = (req.body.freetId)
+      const freet = await FreetCollection.findOne(freetId);
+      console.log(req.body);
+      console.log(freet);
+      if (!freet){ //same as freetValidator.isFreetExists
+        res.status(404).json({
+          error: {
+            freetNotFound: `Freet with freet ID ${req.body.freetId} does not exist. :()`
+          }
+        });
+        return;
+      }
+      const react = await ReactionCollection.findOneByUserAndFreet(userId, freetId);
+      if (react){ //reaction already exists, let's delete it
+        //TODO: remove value from Freet's count
+        await ReactionCollection.deleteOneByFreetAndUser(userId, freetId);
+      }
+      //TODO: add value to Freet's count
+      const reaction = await ReactionCollection.addOne(userId, freetId, req.body.value);
+      console.log("made new freet");
       res.status(201).json({
-        message: `Your account was created successfully. You have been logged in as ${user.username}`,
-        // user: util.constructUserResponse(user)
+        message: `React was created successfully.`,
+        react: util.constructReactionResponse(reaction)
       });
+      
     }
   );
 
@@ -126,10 +147,11 @@ router.put(
     userValidator.isUserLoggedIn,
     reactionValidator.isReactionExists,
     reactionValidator.isValidReactionModifier,
-    // reactionValidator.isValidReactionContent
+    reactionValidator.isValidReaction
   ],
   async (req: Request, res: Response) => {
     const reaction = await ReactionCollection.updateOne(req.params.reactionId, req.body.content);
+    console.log("changing reaction");
     res.status(200).json({
       message: 'Your reaction was updated successfully.',
       reaction: util.constructReactionResponse(reaction)

@@ -30,7 +30,7 @@ router.get(
   async (req: Request, res: Response, next: NextFunction) => {
     // If yes username or yes freetID, go to next function
     console.log("here");
-    if (req.query.author !== undefined || req.query.id !==undefined) {
+    if (req.query.author !== undefined || req.query.freetId !==undefined) {
       console.log("one is true");
       next();
       return;
@@ -43,13 +43,13 @@ router.get(
   },
   async (req: Request, res: Response, next: NextFunction) => {
   //if yes freetID, go to next function
-  if (req.query.id == undefined){
+  if (req.query.freetId == undefined){
     console.log("there's not an id");
     next();
     return;
   }
     
-  const authorComments = await CommentCollection.findAllByFreetId(req.query.id as string);
+  const authorComments = await CommentCollection.findAllByFreetId(req.query.freetId as string);
   const response = authorComments.map(util.constructCommentResponse);
   res.status(200).json(response);
   console.log(response, 3);
@@ -86,7 +86,7 @@ router.post(
   ],
   async (req: Request, res: Response) => {
     const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
-    const freetId = (req.body.freet)
+    const freetId = (req.body.freetId)
     const comment = await CommentCollection.addOne(userId, freetId, req.body.content);
 
     res.status(201).json({
