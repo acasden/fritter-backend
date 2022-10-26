@@ -14,6 +14,7 @@ import {freetRouter} from '../freet/router';
 import {commentRouter} from '../comment/router';
 import {reactionRouter} from '../reaction/router';
 import {flagRouter} from '../flag/router';
+import {freetSplitterRouter} from '../freet_splitter/router';
 
 // import {}
 
@@ -84,6 +85,7 @@ app.use('/api/freets', freetRouter);
 app.use('/api/comments', commentRouter);
 app.use('/api/reactions', reactionRouter);
 app.use('/api/flags', flagRouter);
+app.use('/api/splits', freetSplitterRouter);
 // app.use('/api/modes', modeRouter);
 
 // Catch all the other routes and display error message

@@ -1,70 +1,87 @@
 import type {Request, Response, NextFunction} from 'express';
 import {Types} from 'mongoose';
-import CommentCollection from '../comment/collection';
+import FreetSplitterCollection from '../freet_splitter/collection';
 import FreetCollection from '../freet/collection';
 
 /**
- * Checks if a comment with commentId is req.params exists
+ * Checks if a freetSplitter of user exists
  */
-const isCommentExists = async (req: Request, res: Response, next: NextFunction) => {
-  const validFormat = Types.ObjectId.isValid(req.params.commentId);
-  const comment = validFormat ? await CommentCollection.findOne(req.params.commentId) : '';
-  if (!comment) {
+const isFreetSplitterExists = async (req: Request, res: Response, next: NextFunction) => {
+  console.log("isfreetsplitterexists");
+  const userId = req.session.userId as string;
+  const freetSplitter = await FreetSplitterCollection.findOneUserID(userId);
+  console.log(userId, freetSplitter);
+  if (!freetSplitter) {
     res.status(404).json({
       error: {
-        commentNotFound: `Comment with comment ID ${req.params.commentId} does not exist.`
+        freetSplitterNotFound: `User ${userId} does not have an existing FreetSplitter draft.`
       }
     });
     return;
   }
-
+  console.log("it dose exist");
   next();
 };
 
 /**
- * Checks if the content of the comment in req.body is valid, i.e not a stream of empty
+ * Checks if the content of the freetSplitter in req.body is valid, i.e not a stream of empty
  * spaces and not more than 140 characters
  */
-const isValidCommentContent = (req: Request, res: Response, next: NextFunction) => {
-  const {content} = req.body as {content: string};
+const isValidFreetSplitterContent = (req: Request, res: Response, next: NextFunction) => {
+  console.log("isvalidfreetsplittercontent");
+  const {content, splits} = req.body as {content: string, splits:string};
+  console.log(content, splits);
   if (!content.trim()) {
     res.status(400).json({
-      error: 'Comment content must be at least one character long.'
+      error: 'FreetSplitter content must be at least one character long.'
     });
     return;
   }
 
-  if (content.length > 140) {
-    res.status(413).json({
-      error: 'Comment content must be no more than 140 characters.'
+  // const splitArray = splits.split(`,`).map(x => +x)
+  const splitRegex = /"^[0-9]+(,[0-9]+)*"/i; //regex for "number" or "number,number,number..."
+  if (!splitRegex.test(splits)) {
+    res.status(400).json({
+      error: {
+        username: 'Splits attribute must only be numbers separated by commas, not ${splits}.'
+      }
     });
     return;
   }
-
   next();
 };
 
-/**
- * Checks if the current user is the author of the comment whose commentId is in req.params
- */
-const isValidCommentModifier = async (req: Request, res: Response, next: NextFunction) => {
-  const comment = await CommentCollection.findOne(req.params.commentId);
-  const userId = comment.userID._id;
-  const freetID = comment.post._id;
-  const freet = FreetCollection.findOne(freetID);
-  const freetUserId= (await freet).authorId;
-  if (req.session.userId !== userId.toString() && req.session.userId !== freetUserId) {
-    res.status(403).json({
-      error: 'Cannot modify other users\' comments.'
+const isValidFreetSplitterValue = (req: Request, res: Response, next: NextFunction) => {
+  console.log("isvalidfreetsplitervalue");
+  var valueString = req.body.value;
+  if (valueString==undefined){
+      valueString = req.params.value;
+  }
+  console.log('in verifier. value:', valueString);
+
+  if (!valueString.trim()) {
+    res.status(400).json({
+      error: 'FreetSplitter split value must be at least one character long.'
     });
     return;
   }
 
+  const splitRegex = /^[0-9]+/i;
+  if (!splitRegex.test(valueString) || valueString === "0") {
+    res.status(400).json({
+      error: {
+        username: 'Splits value must be a positive number.'
+      }
+    });
+    return;
+  }
+  
   next();
 };
+
 
 export {
-  isValidCommentContent,
-  isCommentExists,
-  isValidCommentModifier
+  isValidFreetSplitterContent,
+  isFreetSplitterExists,
+  isValidFreetSplitterValue
 };

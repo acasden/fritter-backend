@@ -11,6 +11,7 @@
   <script src="/scripts/reaction.js"></script>
   <script src="/scripts/splitter.js"></script>
   <script src="/scripts/flag.js"></script>
+  <script src="/scripts/splitter.js"></script>
   <script src="/scripts/index.js"></script>
 </head>
 
@@ -260,18 +261,68 @@
 
         <!-- split section -->
 
-        <!-- <form id="split-freet">
-          <h3>Split Freet</h3>
+        <form id="draft-split">
+          <h3>Create Freet-Splitter Draft</h3>
           <div>
             <label for="content">Content:</label>
             <textarea id="content" name="content"></textarea>
           </div>
           <div>
             <label for ="splits">Splits (written as indices separated by commas):</label>
-            <textarea id="splits" name ="splits"></textarea>
+            <input id="splits" name ="splits"></input>
           </div>
           <input type="submit" value="Split Freet">
-        </form> -->
+        </form>
+
+        <form id="post-split">
+          <h3>Post Freet-Splitter</h3>
+          <div>
+            <label for="splitterId">FreetSplitterId:</label>
+            <input id="splitterId" name="splitterId"></input>
+          </div>
+          <input type="submit" value="Split Freet">
+        </form>
+
+        <form id="get-split">
+          <h3>Get Current Freet-Splitter</h3>
+          <input type="submit" value="Get Existing Freet Splitter">
+        </form>
+
+        <form id="change-split-value">
+          <h3>Change Freet-Splitter Value</h3>
+          <div>
+            <label for="value">Value (enter as a single number):</label>
+            <input id="value" name="value"></input>
+          </div>
+          <input type="submit" value="Change Vale">
+        </form>
+
+        <form id="change-split-content">
+          <h3>Change Freet-Splitter Content</h3>
+          <div>
+            <label for="content">Content:</label>
+            <textarea id="content" name="content"></textarea>
+          </div>
+          <input type="submit" value="Change Content">
+        </form>
+
+        <form id="delete-split">
+          <h3>Delete Freet-Splitter Draft</h3>
+          <div>
+            
+            <label for="splitterId">Freet-SplitterId:</label>
+            <input id="splitterId" name="splitterId"></input>
+          </div>
+          <input type="submit" value="Delete Freet">
+        </form>
+        <!--   
+          'draft-split':draftSplit, (content, splits)
+          'post-split':postSplit, (splitterId)
+          'get-split':getCurrentDraft, ()
+          'change-split-value':changeSplitValue, (value)
+          'change-split-content':changeSplitContent (content)
+          'delete-split':deleteDraft (splitterId)
+        -->
 
 
       </div>

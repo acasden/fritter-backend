@@ -1,7 +1,7 @@
 import type {Types, PopulatedDoc, Document} from 'mongoose';
 import {Schema, model} from 'mongoose';
 import type {User} from '../user/model';
-import type { Freet } from 'freet/model';
+// import type { Freet } from '../freet/model';
 
 /**
  * This file defines the properties stored in a FreetSplitter
@@ -13,14 +13,14 @@ export type FreetSplitter = {
   _id: Types.ObjectId; // MongoDB assigns each object this ID on creation
   userID: Types.ObjectId;
   content: string;
-  splits: Set<number>;
+  splits: string; //number,number,number
 };
 
 export type PopulatedFreetSplitter = {
     _id: Types.ObjectId; // MongoDB assigns each object this ID on creation
   userID: User;
   content: string;
-  splits: Set<number>;
+  splits: string;
 };
 
 // Mongoose schema definition for interfacing with a MongoDB table
@@ -39,6 +39,11 @@ const FreetSplitterSchema = new Schema<FreetSplitter>({
     type: String,
     required: true
   },
+  // The locations that separate the content into different freet/comments (zero indexed)
+  splits:{
+    type: String,
+    required: true
+  }
 });
 
 const FreetSplitterModel = model<FreetSplitter>('FreetSplitter', FreetSplitterSchema);

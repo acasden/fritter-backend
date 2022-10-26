@@ -21,6 +21,7 @@ class CommentCollection {
    * @return {Promise<HydratedDocument<Comment>>} - The newly created Comment
    */
   static async addOne(userID: Types.ObjectId | string, freetId: Types.ObjectId | string, content: string): Promise<HydratedDocument<Comment>> {
+    console.log("creating comment with content ${content}");
     const date = new Date();
     console.log(freetId);
     const Comment = new CommentModel({

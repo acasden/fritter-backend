@@ -56,9 +56,13 @@ const formsAndHandlers = {
   'view-flag-by-freet':viewFlagByFreet,
   'create-flag':createFlag,
   'edit-flag':addManualFlagToFlag,
-  'delete-flag':deleteManualFlag
-  // 'split-freet': splitFreet,
-  
+  'delete-flag':deleteManualFlag,
+  'draft-split':draftSplit,
+  'post-split':postSplit,
+  'get-split':getCurrentDraft,
+  'change-split-value':changeSplitValue,
+  'change-split-content':changeSplitContent,
+  'delete-split':deleteDraft  
 };
 
 // Attach handlers to forms
