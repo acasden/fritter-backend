@@ -49,7 +49,7 @@ const isValidCommentContent = (req: Request, res: Response, next: NextFunction) 
  */
 const isValidCommentModifier = async (req: Request, res: Response, next: NextFunction) => {
   const comment = await CommentCollection.findOne(req.params.commentId);
-  const userId = comment.userID._id;
+  const userId = comment.userID._id;//author of comment being edited
   const freetID = comment.post._id;
   const freet = await FreetCollection.findOne(freetID);
   if (!freet){
@@ -58,7 +58,7 @@ const isValidCommentModifier = async (req: Request, res: Response, next: NextFun
     });
     return;
   }
-  const freetUserId= freet.authorId;
+  const freetUserId= freet.authorId;  //author of freet being posted upon
   if (req.session.userId !== userId.toString() && req.session.userId !== freetUserId) {
     res.status(403).json({
       error: 'Cannot modify other users\' comments.'

@@ -7,9 +7,13 @@ import FreetCollection from '../freet/collection';
  */
 const isFreetExists = async (req: Request, res: Response, next: NextFunction) => {
   console.log("isfreetexists");
+  // console.log(req.params, req.query, req.body);
   var freetId= req.params.freetId;
   if (!freetId){ 
     freetId = req.query.freetId as string;
+  }
+  if (!freetId){ 
+    freetId = req.body.freetId as string;
   }
   // console.log("our freet id is", freetId);
   const validFormat = Types.ObjectId.isValid(freetId);
@@ -53,7 +57,14 @@ const isValidFreetContent = (req: Request, res: Response, next: NextFunction) =>
  * Checks if the current user is the author of the freet whose freetId is in req.params
  */
 const isValidFreetModifier = async (req: Request, res: Response, next: NextFunction) => {
-  const freet = await FreetCollection.findOne(req.params.freetId);
+  var freetId= req.params.freetId;
+  if (!freetId){ 
+    freetId = req.query.freetId as string;
+  }
+  if (!freetId){ 
+    freetId = req.body.freetId as string;
+  }
+  const freet = await FreetCollection.findOne(freetId);
   const userId = freet.authorId._id;
   if (req.session.userId !== userId.toString()) {
     res.status(403).json({

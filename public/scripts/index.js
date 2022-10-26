@@ -50,7 +50,13 @@ const formsAndHandlers = {
   'view-all-reactions': viewAllReactions,
   'view-reactions-by-freet': viewReactionsByFreet,
   'create-reaction': createReaction,
-  'delete-reaction': deleteReaction
+  'delete-reaction': deleteReaction,
+  'view-all-flags':viewAllFlags,
+  'view-flag':viewFlag,
+  'view-flag-by-freet':viewFlagByFreet,
+  'create-flag':createFlag,
+  'edit-flag':addManualFlagToFlag,
+  'delete-flag':deleteManualFlag
   // 'split-freet': splitFreet,
   
 };

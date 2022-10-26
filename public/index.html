@@ -10,6 +10,7 @@
   <script src="/scripts/comment.js"></script>
   <script src="/scripts/reaction.js"></script>
   <script src="/scripts/splitter.js"></script>
+  <script src="/scripts/flag.js"></script>
   <script src="/scripts/index.js"></script>
 </head>
 
@@ -22,6 +23,7 @@
     <section id="operations-container">
       <h2>Operations:</h2>
       <div class="scrollbox">
+        <!-- user section -->
         <form id="create-user">
           <h3>Create User</h3>
           <div>
@@ -76,6 +78,7 @@
           <input type="submit" value="Sign out">
         </form>
 
+        <!-- freet section  -->
         <form id="view-all-freets">
             <h3>View All Freets</h3>
             <input type="submit" value="View All Freets">
@@ -120,7 +123,7 @@
           </div>
           <input type="submit" value="Delete Freet">
         </form>
-
+        <!-- reaction section -->
         <form id="create-reaction">
           <h3>React</h3>
           <div>
@@ -157,20 +160,7 @@
           <input type="submit" value="Delete reaction">
         </form>
 
-
-        <!-- <form id="split-freet">
-          <h3>Split Freet</h3>
-          <div>
-            <label for="content">Content:</label>
-            <textarea id="content" name="content"></textarea>
-          </div>
-          <div>
-            <label for ="splits">Splits (written as indices separated by commas):</label>
-            <textarea id="splits" name ="splits"></textarea>
-          </div>
-          <input type="submit" value="Split Freet">
-        </form> -->
-
+        <!-- Comment Section -->
         <form id="create-comment">
           <h3>Comment</h3>
           <div>
@@ -215,6 +205,74 @@
           </div>
           <input type="submit" value="View Comments">
         </form>
+
+        <!-- flag section -->
+        <form id="view-all-flags">
+          <h3>View All Flags</h3>
+          <input type="submit" value="View Flags">
+        </form>
+
+        
+        <form id="view-flag">
+          <h3>View Flag by flagID</h3>
+          <div>
+            <label for="flagId">FlagID:</label>
+            <input id="flagId" name="flagId">
+          </div>
+          <input type="submit" value="View Flags">
+        </form>
+
+        <form id="view-flag-by-freet">
+          <h3>View Flags under Freet</h3>
+          <div>
+            <label for="freetId">FreetID:</label>
+            <input id="freetId" name="freetId">
+          </div>
+          <input type="submit" value="View Flags">
+        </form>
+
+        <form id="create-flag">
+          <h3>Create manual flag on your own freet</h3>
+          <div>
+            <label for="freetId">FreetID:</label>
+            <input id="freetId" name="freetId">
+          </div>
+          <input type="submit" value="Create Flag">
+        </form>
+        
+        <form id="edit-flag">
+          <h3>Add manual flag to already flagged freet</h3>
+          <div>
+            <label for="flagId">FlagId:</label>
+            <input id="flagId" name="flagId">
+          </div>
+          <input type="submit" value="View Comments">
+        </form>
+
+        <form id="delete-flag">
+          <h3>Delete manual flag on your own freet</h3>
+          <div>
+            <label for="flagId">FlagId:</label>
+            <input id="flagId" name="flagId">
+          </div>
+          <input type="submit" value="View Comments">
+        </form>
+
+        <!-- split section -->
+
+        <!-- <form id="split-freet">
+          <h3>Split Freet</h3>
+          <div>
+            <label for="content">Content:</label>
+            <textarea id="content" name="content"></textarea>
+          </div>
+          <div>
+            <label for ="splits">Splits (written as indices separated by commas):</label>
+            <textarea id="splits" name ="splits"></textarea>
+          </div>
+          <input type="submit" value="Split Freet">
+        </form> -->
+
 
       </div>
     </section>
