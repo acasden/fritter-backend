@@ -314,17 +314,47 @@ This renders the `index.html` file that will be used to interact with the backen
 
 - `403` if the user is not logged in
 
-#### `GET /api/comments/:commentID? ` - Gets a specific comment
+#### `GET /api/comments ` - Gets all comments
 
 **Returns**
 
 - A success message
+- An object with the details on all comments
+
+
+
+#### `GET /api/comments?commentID=commentID ` - Gets a specific comment
+
+**Returns**
+
+- A success message
+- An object with the comments details
 
 **Throws**
 
-- `403` if the user is not logged in
-- `403` if the user is not the author of the freet
+- `404` if the commentId is invalid
+
+#### `GET /api/comments?freetID=freetID ` - Gets all comments under freet
+
+**Returns**
+
+- A success message
+- An object with all the comments details
+
+**Throws**
+
 - `404` if the freetId is invalid
+
+#### `GET /api/comments?userId=userId ` - Gets all comments posted by a specific user
+
+**Returns**
+
+- A success message
+- An object with all the comments details
+
+**Throws**
+
+- `404` if the userId is invalid
 
 #### `DELETE /api/comments/:commentID? ` - Delete a specific comment
 
@@ -335,7 +365,7 @@ This renders the `index.html` file that will be used to interact with the backen
 **Throws**
 
 - `403` if the user is not logged in
-- `403` if the user is not the author of the comment or freet
+- `403` if the user is not the author of the comment or comment.freet
 - `404` if the commentId is invalid
 
 #### `POST /api/comments` - Adds a comment to a Freet
@@ -343,7 +373,7 @@ This renders the `index.html` file that will be used to interact with the backen
 **Body** 
 - `userId` _{string}_ the userId of user writing the comment
 - `content` _{string}_ the text the user wishes to comment
-- `freet` _{string}_ the FreetID of the freet being commented on
+- `freetId` _{string}_ the FreetID of the freet being commented on
 
 **Returns**
 
@@ -354,61 +384,108 @@ This renders the `index.html` file that will be used to interact with the backen
 
 - `404` if the commentId is invalid
 
-#### `POST /api/users/reactions/freetId?&value? ` -Adds a Reacted post to user's Reacted state
+#### `GET /api/reactions ` -Returns all reactions
 
-**Body**
-- `reaction` the new reaction (includes Reaction.freet, Reaction.vote)
 
 **Returns**
 
 - A success message
-- A object with the created Reaction
+- An object containing all reaction details
+
+
+
+#### `POST /api/reactions/ ` - Creates a new reaction
+
+**Body** 
+
+- freetId for the freet the user is reacting on
+- one of -1, 0, 1 for the value of the reaction
+
+**Returns**
+
+- A success message
+- An object containing the new reaction details
 
 **Throws**
 
-- `403` if the user is not logged in
+- `404` if the FreetId is invalid
+- `400` if the value is not -1, 0, 1
 
-#### `GET /api/users/reactions/FreetID? ` -Returns the reaction 
+#### `Delete /api/reactions/:reactionId ` - Deletes a reaction
+
+
+**Returns**
+
+-A success message
+
+**Throws**
+
+- `404` if the reactionId is invalid
+
+#### `GET /api/flag/ ` - Gets all flags
+
+**Returns**
+
+- a success message
+- an object containing all flag details
+
+
+#### `GET /api/flag/?flagId ` - Gets flag with flagId
+
+**Returns**
+
+- a success message
+- an object containg the details of the flag
+
+**Throws**
+
+- `404` if the flagId is invalid
+
+#### `GET /api/flag/?freetId ` - Gets flag with flagId
+
+**Returns**
+
+- a success message
+- an object containing the details of the flag
+
+**Throws**
+
+- `404` if the freetId is invalid
+
+
+#### `POST /api/flag/ ` - Adds user flag using freetId
 
 **Body**
-- `reaction` the new reaction (includes Reaction.freet, Reaction.vote)
+
+-freetId
 
 **Returns**
 
-- A Number 0, 1, 2 representing the reaction the signed-in user had on the Freet with FreetID "Reaction.vote"
-- 0 if there is no reaction by that user on that freet
+- a success message
+- an object containing the details of the flag
 
 **Throws**
 
+- `404` if the freetId is invalid
+- `403` if the user is not the poster of the freet with freetId
+
+
+#### `POST /api/flag/fields.flagId ` - Adds user flag using flagId
+
+
+**Returns**
+
+- a success message
+- an object containing the details of the flag
+
+**Throws**
+
+- `404` if the flagId is invalid
+- `403` if the user is not the poster of the freet with freetId
 - `403` if the user is not logged in
-- `404` if the FreetId is invalid
 
-#### `GET /api/freet/:freetId?/comments ` - Returns Comments on a Freet
+#### `Delete /api/flag/fields.flagId ` - Deletes user flag using flagId
 
-**Returns**
-
-- a list of Comments for Comments that were posted under this Freet
-- an empty list if there are no Comments on this Freet
-
-**Throws**
-
-- `404` if the FreetId is invalid
-
-#### `GET /api/freet/:freetId?/reactions ` - View number of Reactions on a Freet
-
-**Returns**
-
-- a tuple representing (upvotes, downvotes) for the number of reactions the Freet has
-
-**Throws**
-
-- `404` if the FreetId is invalid
-
-#### `POST /api/freet/:freetId?/flag ` - Flags or UnFlags a Freet
-
-**Body**
-
-- flag _{bool}_ True if Flagging, False if Un-Flagging
 
 **Returns**
 
@@ -416,70 +493,99 @@ This renders the `index.html` file that will be used to interact with the backen
 
 **Throws**
 
-- `404` if the FreetId is invalid
+- `404` if the flagId is invalid
+- `403` if the user is not the poster of the freet with freetId
+- `403` if the user is not logged in
 
-#### `POST /api/reactions` - Create an new reaction
+#### `POST /api/splits/` - Creates a freetsplitter draft
 
 **Body**
 
-- `vote` _{Number}_ - The User's vote {-1, 1}
-- `user` _{string}_ - UserID
-- `freet` _{string}_ - FreetID
-
+- content: string of text
+- splits: string of numbers separated with a comma 
 **Returns**
 
-- A success message
-- An object with the created reaction's details 
-
-**Throws**
-
-- `403` if there is not a user logged in
-- `400` if vote in the wrong format
-- `404` if 4 if the UserID is invalid
-- `404` if 4 if the FreetID is invalid
-
-#### `PUT /api/reactions` - Update a user's profile
-
-**Body** _(no need to add fields that are not being changed)_
-
-- `react`_{string}_ - reactID
-- `user` _{string}_ - userID
-- `vote` _{Number}_ - The Users new vote {-1, 1}
-
-
-**Returns**
-
-- A success message
-- An object with the created reaction's details 
+- a success message
+- an object containing the details of the freetsplitter
 
 **Throws**
 
 - `403` if the user is not logged in
-- `403` if the user logged in is not the user who made the Reaction
-- `400` if vote in the wrong format
-- `404` if 4 if the UserID is invalid
-- `404` if 4 if the reactID is invalid
 
 
-#### `DELETE /api/reactions
+#### `POST /api/splits/` - Creates a freet and comment(s) with content in existing freetsplitter draft
 
-**body**
+**Body**
 
-- `react`_{string}_ - reactID
-- `user` _{string}_ - userID
+- splitterId: id of existing split draft
 
 **Returns**
 
-- A success message
+- a success message
+- an object containing the details of freet created
 
 **Throws**
 
-- `403` if there is not a user logged in
-- `403` if the user logged in is not the user who made the Reaction
-- `404` if 4 if the UserID is invalid
-- `404` if 4 if the reactID is invalid
+- `403` if the user is not logged in
+- `404` if the splitterId is invalid
+- `400` if the FreetSplitter draft is not a valid format to post
 
-#### `GET /api/freets/modes/safe` - Get all the SAFE freets
+
+#### `GET /api/splits/?splitterId` - Gets current FreetSplitter draft
+
 **Returns**
 
-- An array of all NOT-FLAGGED freets sorted in descending order by date modified
+- a success message
+- an object containing the details of current FreetSplitter
+
+**Throws**
+
+- `403` if the user is not logged in
+- `404` if the splitterId is invalid
+- `400` if the FreetSplitter draft is not a valid format to post
+
+#### `PUT /api/splits/` - Gets current FreetSplitter draft
+
+**Body**
+
+- splitterId: id of existing FreetSplitter draft
+- value: new split to add or old split to remove "number"
+
+**Returns**
+
+- a success message
+- an object containing the details of current FreetSplitter
+
+**Throws**
+
+- `403` if the user is not logged in
+- `404` if the splitterId is invalid
+
+#### `PUT /api/splits/` - Gets current FreetSplitter draft
+
+**Body**
+
+- splitterId: id of existing FreetSplitter draft
+- content: new text to replace FreetSplitter.content
+
+**Returns**
+
+- a success message
+- an object containing the details of current FreetSplitter
+
+**Throws**
+
+- `403` if the user is not logged in
+- `404` if the splitterId is invalid
+
+#### `Delete /api/splits/?splitterId` - Gets current FreetSplitter draft
+
+**Returns**
+
+- a success message
+
+**Throws**
+
+- `403` if the user is not logged in
+- `404` if the splitterId is invalid
+
