@@ -47,11 +47,31 @@ router.get(
   [
     freetValidator.isFreetExists //make sure freet exist
   ],
-  async (req: Request, res: Response) => {
+  async (req: Request, res: Response, next: NextFunction) => {
+    if(req.query.one !== undefined){ //looking for single reaction
+      next();
+      return;
+    }
     const freetReactions = await ReactionCollection.findAllByFreetId(req.query.freetId as string);
     console.log("there's a freet, looking at it's reactions", freetReactions);
     const response = freetReactions.map(util.constructReactionResponse);
     res.status(200).json(response);
+  },
+  [
+    userValidator.isUserLoggedIn
+  ],
+  async (req: Request, res: Response, next: NextFunction) => {
+    const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn 
+    const freetId = req.query.freetId as string;
+    const freetReaction = await ReactionCollection.findOneByUserAndFreet(userId, freetId);
+    console.log("there's a freet and user is logged in, looking for reactions", freetReaction);
+    if (freetReaction == null){
+      const response = "There is no Reaction on this freet by the signed in user";
+      res.status(404).json(response);
+    }
+    else{const response = util.constructReactionResponse(freetReaction);
+    res.status(200).json(response);}
+    
   }
 );
 

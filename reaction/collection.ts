@@ -100,7 +100,7 @@ class ReactionCollection {
    * @param {string} freetId
    * @return {Promise<HydratedDocument<Reaction>>} a single reaction or undefined
    */
-   static async findOneByUserAndFreet(userId: Types.ObjectId |string, freetId: Types.ObjectId |string): Promise<Array<HydratedDocument<Reaction>>> {
+   static async findOneByUserAndFreet(userId: Types.ObjectId |string, freetId: Types.ObjectId |string): Promise<HydratedDocument<Reaction>> {
     const freet = await FreetCollection.findOne(freetId);
     const user = await UserCollection.findOneByUserId(userId);
     console.log("finding one for freetid, userid: ", freet._id, user._id);

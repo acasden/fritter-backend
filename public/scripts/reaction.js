@@ -17,6 +17,12 @@
     .then(showResponse)
     .catch(showResponse);
   }
+
+  function viewOneReactionByFreet(fields) {
+    fetch(`/api/reactions?freetId=${fields.freetId}&one=True`)
+    .then(showResponse)
+    .catch(showResponse);
+  }
     
   function createReaction(fields) {
     fetch('/api/reactions', {method: 'POST', body: JSON.stringify(fields), headers: {'Content-Type': 'application/json'}})

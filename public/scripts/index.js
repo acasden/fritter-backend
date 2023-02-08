@@ -51,6 +51,7 @@ const formsAndHandlers = {
   'view-reactions-by-freet': viewReactionsByFreet,
   'create-reaction': createReaction,
   'delete-reaction': deleteReaction,
+  'view-one-reaction': viewOneReactionByFreet,
   'view-all-flags':viewAllFlags,
   'view-flag':viewFlag,
   'view-flag-by-freet':viewFlagByFreet,

@@ -29,9 +29,8 @@ router.get(
   '/',
   async (req: Request, res: Response, next: NextFunction) => {
     // If yes username or yes freetID, go to next function
-    console.log("here");
     if (req.query.author !== undefined || req.query.freetId !==undefined) {
-      console.log("one is true");
+      // console.log("one is true");
       next();
       return;
     }
@@ -39,20 +38,16 @@ router.get(
     const allComments = await CommentCollection.findAll();
     const response = allComments.map(util.constructCommentResponse);
     res.status(200).json(response);
-    console.log(response, 1);
   },
   async (req: Request, res: Response, next: NextFunction) => {
   //if yes freetID, go to next function
   if (req.query.freetId == undefined){
-    console.log("there's not an id");
     next();
     return;
   }
-    
   const authorComments = await CommentCollection.findAllByFreetId(req.query.freetId as string);
   const response = authorComments.map(util.constructCommentResponse);
   res.status(200).json(response);
-  console.log(response, 3);
   },
   [    userValidator.isAuthorExists
   ],
@@ -63,7 +58,6 @@ router.get(
     const allComments = await CommentCollection.findAllByUsername(req.query.author as string);
     const response = allComments.map(util.constructCommentResponse);
     res.status(200).json(response);  
-    console.log(response, 2);
   },
 );
 
